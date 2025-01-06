@@ -1,16 +1,25 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: cronjob
+  name: print-date
 spec:
-  schedule: "*/5 * * * *"
+  schedule: "*/5 * * * *"  # Every 5 minutes
+  successfulJobsHistoryLimit: 10
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 600  # Keep pods for 10 minutes after job completion
       template:
         spec:
           containers:
-            - name: container3
-              image: nginx
-          restartPolicy: Never
+          - name: print-date
+            image: busybox
+            command:
+            - /bin/sh
+            - -c
+            - " date; echo 'Printed by Kubernetes CronJob"
+          restartPolicy: OnFailure
+
+~                                       
                                                                                                                                                                                                           
                           
